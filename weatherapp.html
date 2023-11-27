@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(to right, #3498db, #2c3e50);
+      margin: 0;
+      color: white;
+    }
+
+    #weather-container {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div id="weather-container">
+  <h1>Weather App</h1>
+  <label for="location">Enter location:</label>
+  <input type="text" id="location" placeholder="City, Country">
+  <button onclick="getWeather()">Get Weather</button>
+  <div id="weather-info"></div>
+</div>
+
+<script>
+  function getWeather() {
+    const locationInput = document.getElementById('location');
+    const location = locationInput.value;
+
+    if (location.trim() === '') {
+      alert('Please enter a location.');
+      return;
+    }
+
+    const apiKey = 'daf725abc64bbb61debc87c4c17ecbe2';
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric`;
+
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        const weatherInfo = document.getElementById('weather-info');
+        weatherInfo.innerHTML = `
+          <h2>Current Weather</h2>
+          <p>Location: ${data.name}, ${data.sys.country}</p>
+          <p>Temperature: ${data.main.temp}°C</p>
+          <p>Conditions: ${data.weather[0].description}</p>
+        `;
+      })
+      .catch(error => {
+        console.error('Error fetching weather data:', error);
+        alert('Error fetching weather data. Please try again.');
+      });
+  }
+</script>
+
+</body>
+</html>
